@@ -1,3 +1,5 @@
+import connection from '../database/database';
+
 async function createPlants(req, res) {
     
 };
