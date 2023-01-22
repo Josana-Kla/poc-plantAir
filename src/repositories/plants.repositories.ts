@@ -9,4 +9,10 @@ export async function updatingPlant(id: string, status: string): Promise<QueryRe
         WHERE id=$2;
     `, [status, id]
     )
-}
+};
+
+export async function deletingPlant(id: string): Promise<QueryResult<PlantsEntity>> {
+    return await connection.query(`
+        DELETE FROM plants WHERE id=$1;
+    `, [id]);
+};

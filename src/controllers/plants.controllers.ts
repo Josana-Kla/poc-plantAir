@@ -2,7 +2,7 @@ import connection from '../database/database';
 import { Response, Request } from 'express';
 import joi from 'joi';
 import { Plants } from 'protocols';
-import { updatingPlant } from 'repositories/plants.repositories';
+import { deletingPlant, updatingPlant } from 'repositories/plants.repositories';
 
 export const plantSchema = joi.object({
     plantName: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
@@ -91,8 +91,16 @@ async function updatePlants(req: Request, res: Response) {
     }
 };
 
-async function deletePlants(req, res) {
+async function deletePlants(req: Request, res: Response) {
+    const id: string = req.params.id;
     
+    try {
+        await deletingPlant(id);
+        return res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
 };
 
 export { createPlants, getAllPlants, updatePlants, deletePlants };
