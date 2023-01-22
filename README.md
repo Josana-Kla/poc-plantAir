@@ -12,7 +12,7 @@ body:
     "plantName": "Dionae", 
     "grownPlantSize": "small",  // the options are: "small", "medium" or "large"
     "plantCategory": "Carnivora", 
-    "image": "https://nomedositeefotoaqui.jpg",
+    "image": "https://sitenamewithphoto.jpg",
     "donor": "Ana",
     "description": "Ama insetos"  // it's optional
 }

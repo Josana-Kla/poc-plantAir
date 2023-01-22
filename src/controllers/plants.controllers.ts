@@ -30,7 +30,7 @@ async function createPlants(req: Request, res: Response) {
 
             return res.sendStatus(201);
         } else {
-            throw new Error("Esse nome já existe");
+            throw new Error("This name already exists");
         }
     } catch (error) {
         console.log(error);
