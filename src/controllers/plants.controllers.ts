@@ -44,8 +44,37 @@ async function createPlants(req: Request, res: Response) {
     }
 };
 
-async function getAllPlants(req, res) {
-    
+async function getAllPlants(req: Request, res: Response) {
+    const { grownPlantSize } = req.query;
+
+    try {
+        if(grownPlantSize) {
+            const { rows: grownPlantSizeValue } = await connection.query(`
+                SELECT 
+                plants.*
+                WHERE plants."grownPlantSize" = $1;
+            `, [grownPlantSize]);
+
+            if(!grownPlantSizeValue[0]) {
+                return res.sendStatus(404);
+            };
+
+            return res.status(200).send(grownPlantSizeValue);
+        } else {
+            const { rows: allPlants } = await connection.query(`
+                SELECT * FROM plants;
+            `);
+
+            if(!allPlants[0]) {
+                return res.sendStatus(404);
+            };
+
+            return res.status(200).send(allPlants);
+        }
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
 };
 
 async function updatePlants(req, res) {
