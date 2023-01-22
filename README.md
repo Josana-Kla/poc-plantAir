@@ -21,7 +21,7 @@ body:
 
 # GET: /plants 
 Or you can use query string for 3 options (small, medium or large):
-**GET: /plants?"grownPlantSize"=medium** 
+**GET: /plants?grownPlantSize=medium** 
 
 # PATCH: /plants/:id
 To change the status from "available" to "donated":

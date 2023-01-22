@@ -18,7 +18,7 @@ export async function insertNewPlant(plantName: string, grownPlantSize: string, 
 
 export async function gettingPlantsBySize(grownPlantSize: string): Promise<QueryResult<PlantsEntity>> {
     return await connection.query(`
-        SELECT plants.* WHERE plants."grownPlantSize" = $1;
+        SELECT * FROM plants WHERE plants."grownPlantSize" = $1;
     `, [grownPlantSize]);
 };
 
