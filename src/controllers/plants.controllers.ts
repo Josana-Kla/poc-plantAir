@@ -1,12 +1,11 @@
-import connection from '../database/database';
 import { Response, Request } from 'express';
 import joi from 'joi';
 import { Plants } from 'protocols';
-import { deletingPlant, updatingPlant } from 'repositories/plants.repositories';
+import { checkPlantExists, deletingPlant, gettingAllPlants, gettingPlantsBySize, insertNewPlant, updatingPlant } from 'repositories/plants.repositories';
 
 export const plantSchema = joi.object({
     plantName: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
-    grownPlantSize: joi.string().valid('small', 'medium', 'large').required().empty(' '),
+    grownPlantSize: joi.string().valid('small' || 'medium' || 'large').required().empty(' '),
     plantCategory: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
     image: joi.string().uri().required().empty(' '),
     donor: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
@@ -24,16 +23,10 @@ async function createPlants(req: Request, res: Response) {
     };
 
     try {
-        const plantExists = await connection.query(`
-            SELECT * FROM plants WHERE "plantName" = $1;
-        `, [plantName]);
+        const plantExists = await checkPlantExists(plantName);
 
         if(plantExists.rows[0] === undefined) {
-            await connection.query(`
-                INSERT INTO plants("plantName", "grownPlantSize", "plantCategory", image, donor, description) VALUES($1, $2, $3, $4, $5, $6)
-            `, 
-                [plantName, grownPlantSize, plantCategory, image, donor, description]
-            );
+            await insertNewPlant(plantName, grownPlantSize, plantCategory, image, donor, description);
 
             return res.sendStatus(201);
         } else {
@@ -46,15 +39,12 @@ async function createPlants(req: Request, res: Response) {
 };
 
 async function getAllPlants(req: Request, res: Response) {
-    const { grownPlantSize } = req.query;
-
+    const grownPlantSize: string  = req.query.grownPlantSize as string;
+  
     try {
         if(grownPlantSize) {
-            const { rows: grownPlantSizeValue } = await connection.query(`
-                SELECT 
-                plants.*
-                WHERE plants."grownPlantSize" = $1;
-            `, [grownPlantSize]);
+            
+            const { rows: grownPlantSizeValue } = await gettingPlantsBySize(grownPlantSize);
 
             if(!grownPlantSizeValue[0]) {
                 return res.sendStatus(404);
@@ -62,9 +52,7 @@ async function getAllPlants(req: Request, res: Response) {
 
             return res.status(200).send(grownPlantSizeValue);
         } else {
-            const { rows: allPlants } = await connection.query(`
-                SELECT * FROM plants;
-            `);
+            const { rows: allPlants } = await gettingAllPlants();
 
             if(!allPlants[0]) {
                 return res.sendStatus(404);
@@ -80,7 +68,7 @@ async function getAllPlants(req: Request, res: Response) {
 
 async function updatePlants(req: Request, res: Response) {
     const id: string = req.params.id;
-    const status: string = req.body.status;
+    const status: string = "donated";
   
     try {
         await updatingPlant(id, status);
