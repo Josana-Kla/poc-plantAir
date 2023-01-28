@@ -1,12 +1,12 @@
-export type PlantsEntity = {
-    id: number,
+/* export type PlantsEntity = {
     plantName: string,
     grownPlantSize: string,
-    plantCategory: string,
     image: string,
-    donor: string,
     status: string,
     description: string,
+    createdAt?: Date,
+    donor: string,
+    plantCategory: string
 };
 
-export type Plants = Omit<PlantsEntity, "id" | "status">
+export type Plants = Omit<PlantsEntity, "id" | "status"> */

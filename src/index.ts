@@ -1,5 +1,5 @@
 import express from 'express';
-import plantRouter from './routers/plants.routers'
+import plantRouter from './routers/plants.routers.js'
 
 const app = express();
 app.use(express.json());

@@ -1,11 +1,21 @@
-import pkg from 'pg';
-import dotenv from 'dotenv';
-dotenv.config();
+import { PrismaClient } from '@prisma/client'
 
-const { Pool } = pkg;
+const prisma = new PrismaClient()
 
-const connection = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
+/* async function main(){
 
-export default connection;
+}
+
+main()
+.then(async () => {
+    console.error("Success!");
+    })
+.catch(async (e) => {
+    console.error(e);
+    process.exit(1);
+})
+.finally(async () => {
+    await prisma.$disconnect();
+}) */
+
+export default prisma;

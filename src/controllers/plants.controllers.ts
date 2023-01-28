@@ -1,19 +1,22 @@
 import { Response, Request } from 'express';
 import joi from 'joi';
-import { Plants } from 'protocols';
-import { checkPlantExists, deletingPlant, gettingAllPlants, gettingPlantsBySize, insertNewPlant, updatingPlant } from 'repositories/plants.repositories';
+/* import { Plants } from 'protocols'; */
+import { checkPlantExists, /* deletingPlant, gettingAllPlants, gettingPlantsBySize, */ insertNewPlant,/*  updatingPlant */ } from '../repositories/plants.repositories.js';
+import { Plant } from "@prisma/client";
+
+export type PlantInput = Omit<Plant, "id" | "createAt">;
 
 export const plantSchema = joi.object({
     plantName: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
     grownPlantSize: joi.string().valid('small' || 'medium' || 'large').required().empty(' '),
-    plantCategory: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
     image: joi.string().uri().required().empty(' '),
-    donor: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
     description: joi.string(),
+    donorId: joi.number().required(),
+    plantCategoryId: joi.number().required(),
 }); 
 
 async function createPlants(req: Request, res: Response) {
-    const { plantName, grownPlantSize, plantCategory, image, donor, description } = req.body as Plants;
+    const plant = req.body as PlantInput;
     const validation = plantSchema.validate(req.body, {abortEarly: false});
 
     if(validation.error) {
@@ -23,10 +26,10 @@ async function createPlants(req: Request, res: Response) {
     };
 
     try {
-        const plantExists = await checkPlantExists(plantName);
+        const plantExists = await checkPlantExists(plant);
 
-        if(plantExists.rows[0] === undefined) {
-            await insertNewPlant(plantName, grownPlantSize, plantCategory, image, donor, description);
+        if(plantExists === undefined) {
+            await insertNewPlant(plant);
 
             return res.sendStatus(201);
         } else {
@@ -38,7 +41,7 @@ async function createPlants(req: Request, res: Response) {
     }
 };
 
-async function getAllPlants(req: Request, res: Response) {
+/* async function getAllPlants(req: Request, res: Response) {
     const grownPlantSize: string  = req.query.grownPlantSize as string;
   
     try {
@@ -89,6 +92,6 @@ async function deletePlants(req: Request, res: Response) {
         console.log(error);
         return res.sendStatus(500);
     }
-};
+}; */
 
-export { createPlants, getAllPlants, updatePlants, deletePlants };
+export { createPlants, /* getAllPlants, updatePlants, deletePlants  */};
