@@ -31,8 +31,8 @@ export async function gettingAllPlants() {
     return await prisma.plant.findMany()
 };
 
-export async function updatingPlant(idNumber: number, status: string) {
-    return await prisma.plant.update({
+async function updatingPlant(idNumber: number, status: string) {
+    await prisma.plant.update({
         where: { id: idNumber },
         data: {
             status
@@ -49,6 +49,7 @@ export async function deletingPlant(idNumber: number) {
 const plantRepository = {
     checkPlantExists,
     insertNewPlant,
+    updatingPlant,
 }
 
 export default plantRepository;

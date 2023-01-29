@@ -15,8 +15,11 @@ async function getAllPlants() {
     
 };
 
-async function updatePlants() {
-    
+async function updatePlants(id: string) {
+    const idNumber: number = Number(id);
+    const status: string = "donated";
+
+    await plantRepository.updatingPlant(idNumber, status);
 };
 
 async function deletePlants() {
