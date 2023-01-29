@@ -1,8 +1,6 @@
 import prisma from '../database/database.js';
-/* import { Plants, PlantsEntity } from 'protocols'; */
 import { Plant } from "@prisma/client";
-
-export type PlantInput = Omit<Plant, "id" | "createAt">;
+import { PlantInput } from '../protocols';
 
 async function checkPlantExists(plant: Plant): Promise<Plant> {
     const plants =  await prisma.plant.findUnique({

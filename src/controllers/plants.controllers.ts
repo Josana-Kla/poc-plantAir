@@ -1,11 +1,7 @@
 import { Response, Request } from 'express';
 import joi from 'joi';
-/* import { Plants } from 'protocols'; */
 import plantService from '../services/plants.services.js';
-import { Plant } from "@prisma/client";
 import { gettingAllPlants, gettingPlantsBySize } from '../repositories/plants.repositories.js';
-
-export type PlantInput = Omit<Plant, "id" | "createAt">;
 
 export const plantSchema = joi.object({
     plantName: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),

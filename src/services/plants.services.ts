@@ -1,4 +1,4 @@
-import plantRepository, { PlantInput } from "../repositories/plants.repositories.js";
+import plantRepository from "../repositories/plants.repositories.js";
 import { Plant } from "@prisma/client";
 
 async function createPlants(plant: Plant) {

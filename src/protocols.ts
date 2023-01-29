@@ -1,12 +1,3 @@
-/* export type PlantsEntity = {
-    plantName: string,
-    grownPlantSize: string,
-    image: string,
-    status: string,
-    description: string,
-    createdAt?: Date,
-    donor: string,
-    plantCategory: string
-};
+import { Plant } from "@prisma/client";
 
-export type Plants = Omit<PlantsEntity, "id" | "status"> */
+export type PlantInput = Omit<Plant, "id" | "createAt">;
