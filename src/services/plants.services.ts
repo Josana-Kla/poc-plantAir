@@ -22,8 +22,10 @@ async function updatePlants(id: string) {
     await plantRepository.updatingPlant(idNumber, status);
 };
 
-async function deletePlants() {
-    
+async function deletePlants(id: string) {
+    const idNumber: number = Number(id);
+
+    await plantRepository.deletingPlant(idNumber)
 };
 
 const plantService = {

@@ -3,7 +3,7 @@ import joi from 'joi';
 /* import { Plants } from 'protocols'; */
 import plantService from '../services/plants.services.js';
 import { Plant } from "@prisma/client";
-import { deletingPlant, gettingAllPlants, gettingPlantsBySize } from '../repositories/plants.repositories.js';
+import { gettingAllPlants, gettingPlantsBySize } from '../repositories/plants.repositories.js';
 
 export type PlantInput = Omit<Plant, "id" | "createAt">;
 
@@ -77,10 +77,9 @@ async function updatePlants(req: Request, res: Response) {
 
 async function deletePlants(req: Request, res: Response) {
     const id: string = req.params.id;
-    const idNumber: number = Number(id);
     
     try {
-        await deletingPlant(idNumber);
+        await plantService.deletePlants(id);
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);

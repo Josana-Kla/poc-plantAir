@@ -40,8 +40,8 @@ async function updatingPlant(idNumber: number, status: string) {
     })
 };
 
-export async function deletingPlant(idNumber: number) {
-    return await prisma.plant.delete({
+async function deletingPlant(idNumber: number) {
+    await prisma.plant.delete({
         where: { id: idNumber }
     })
 };
@@ -50,6 +50,7 @@ const plantRepository = {
     checkPlantExists,
     insertNewPlant,
     updatingPlant,
+    deletingPlant
 }
 
 export default plantRepository;
