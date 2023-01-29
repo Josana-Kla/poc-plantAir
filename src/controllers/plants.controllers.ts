@@ -3,7 +3,7 @@ import joi from 'joi';
 /* import { Plants } from 'protocols'; */
 import plantService from '../services/plants.services.js';
 import { Plant } from "@prisma/client";
-import { gettingAllPlants, gettingPlantsBySize } from '../repositories/plants.repositories.js';
+import { gettingAllPlants, gettingPlantsBySize, updatingPlant } from '../repositories/plants.repositories.js';
 
 export type PlantInput = Omit<Plant, "id" | "createAt">;
 
@@ -63,12 +63,13 @@ async function getAllPlants(req: Request, res: Response) {
     }
 };
 
-/* async function updatePlants(req: Request, res: Response) {
-    const id: string = req.params.id;
+async function updatePlants(req: Request, res: Response) {
+    const id: string = req.params.id; 
+    const idNumber: number = Number(id);
     const status: string = "donated";
   
     try {
-        await updatingPlant(id, status);
+        await updatingPlant(idNumber, status);
         return res.sendStatus(200);
     } catch (error) {
         console.log(error);
@@ -76,7 +77,7 @@ async function getAllPlants(req: Request, res: Response) {
     }
 };
 
-async function deletePlants(req: Request, res: Response) {
+/* async function deletePlants(req: Request, res: Response) {
     const id: string = req.params.id;
     
     try {
@@ -88,4 +89,4 @@ async function deletePlants(req: Request, res: Response) {
     }
 }; */
 
-export { createPlants, getAllPlants, /* updatePlants, deletePlants  */};
+export { createPlants, getAllPlants, updatePlants, /* deletePlants */ };

@@ -31,13 +31,16 @@ export async function gettingAllPlants() {
     return await prisma.plant.findMany()
 };
 
-/* export async function updatingPlant(id: string, status: string): Promise<QueryResult<PlantsEntity>> {
-    return await connection.query(`
-        UPDATE plants SET status=$1 WHERE id=$2;
-    `, [status, id]);
+export async function updatingPlant(idNumber: number, status: string) {
+    return await prisma.plant.update({
+        where: { id: idNumber },
+        data: {
+            status
+        }
+    })
 };
 
-export async function deletingPlant(id: string): Promise<QueryResult<PlantsEntity>> {
+/* export async function deletingPlant(id: string): Promise<QueryResult<PlantsEntity>> {
     return await connection.query(`
         DELETE FROM plants WHERE id=$1;
     `, [id]);
