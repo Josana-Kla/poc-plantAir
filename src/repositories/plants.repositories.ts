@@ -17,7 +17,7 @@ async function insertNewPlant(plant: PlantInput): Promise<void> {
     })
 };
 
-export async function gettingPlantsBySize(grownPlantSize: string) {
+async function gettingPlantsBySize(grownPlantSize: string) {
     return await prisma.plant.findMany({
         where: {
             grownPlantSize
@@ -25,7 +25,7 @@ export async function gettingPlantsBySize(grownPlantSize: string) {
     })
 };
 
-export async function gettingAllPlants() {
+async function gettingAllPlants() {
     return await prisma.plant.findMany()
 };
 
@@ -47,6 +47,8 @@ async function deletingPlant(idNumber: number) {
 const plantRepository = {
     checkPlantExists,
     insertNewPlant,
+    gettingPlantsBySize,
+    gettingAllPlants,
     updatingPlant,
     deletingPlant
 }

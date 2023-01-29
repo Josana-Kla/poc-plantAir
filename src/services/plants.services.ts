@@ -11,8 +11,13 @@ async function createPlants(plant: Plant) {
     await plantRepository.insertNewPlant(plant);
 };
 
-async function getAllPlants() {
-    
+async function getAllPlants(grownPlantSize: string) {
+    if(!grownPlantSize) {
+        return await plantRepository.gettingAllPlants();
+    }
+
+    const grownPlantSizeValue = await plantRepository.gettingPlantsBySize(grownPlantSize);
+    return grownPlantSizeValue;
 };
 
 async function updatePlants(id: string) {
