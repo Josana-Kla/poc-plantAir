@@ -1,14 +1,15 @@
 import { Response, Request } from 'express';
 import joi from 'joi';
 /* import { Plants } from 'protocols'; */
-import { checkPlantExists, /* deletingPlant, gettingAllPlants, gettingPlantsBySize, */ insertNewPlant,/*  updatingPlant */ } from '../repositories/plants.repositories.js';
+import plantService from '../services/plants.services.js';
 import { Plant } from "@prisma/client";
+import { gettingAllPlants, gettingPlantsBySize } from '../repositories/plants.repositories.js';
 
 export type PlantInput = Omit<Plant, "id" | "createAt">;
 
 export const plantSchema = joi.object({
     plantName: joi.string().pattern(/^[A-zÀ-ú]/).min(2).required().empty(' '),
-    grownPlantSize: joi.string().valid('small' || 'medium' || 'large').required().empty(' '),
+    grownPlantSize: joi.string().valid('small', 'medium','large').required().empty(' '),
     image: joi.string().uri().required().empty(' '),
     description: joi.string(),
     donorId: joi.number().required(),
@@ -16,7 +17,7 @@ export const plantSchema = joi.object({
 }); 
 
 async function createPlants(req: Request, res: Response) {
-    const plant = req.body as PlantInput;
+    const plant = req.body;
     const validation = plantSchema.validate(req.body, {abortEarly: false});
 
     if(validation.error) {
@@ -26,38 +27,31 @@ async function createPlants(req: Request, res: Response) {
     };
 
     try {
-        const plantExists = await checkPlantExists(plant);
-
-        if(plantExists === undefined) {
-            await insertNewPlant(plant);
-
-            return res.sendStatus(201);
-        } else {
-            throw new Error("This name already exists");
-        }
+        await plantService.createPlants(plant);
+        return res.sendStatus(201);
     } catch (error) {
         console.log(error);
         return res.sendStatus(500);
     }
 };
 
-/* async function getAllPlants(req: Request, res: Response) {
+async function getAllPlants(req: Request, res: Response) {
     const grownPlantSize: string  = req.query.grownPlantSize as string;
   
     try {
         if(grownPlantSize) {
             
-            const { rows: grownPlantSizeValue } = await gettingPlantsBySize(grownPlantSize);
+            const grownPlantSizeValue = await gettingPlantsBySize(grownPlantSize);
 
-            if(!grownPlantSizeValue[0]) {
+            if(!grownPlantSizeValue) {
                 return res.sendStatus(404);
             };
 
             return res.status(200).send(grownPlantSizeValue);
         } else {
-            const { rows: allPlants } = await gettingAllPlants();
+            const allPlants = await gettingAllPlants();
 
-            if(!allPlants[0]) {
+            if(!allPlants) {
                 return res.sendStatus(404);
             };
 
@@ -69,7 +63,7 @@ async function createPlants(req: Request, res: Response) {
     }
 };
 
-async function updatePlants(req: Request, res: Response) {
+/* async function updatePlants(req: Request, res: Response) {
     const id: string = req.params.id;
     const status: string = "donated";
   
@@ -94,4 +88,4 @@ async function deletePlants(req: Request, res: Response) {
     }
 }; */
 
-export { createPlants, /* getAllPlants, updatePlants, deletePlants  */};
+export { createPlants, getAllPlants, /* updatePlants, deletePlants  */};
